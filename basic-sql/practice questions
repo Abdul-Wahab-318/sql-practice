@@ -1,7 +1,6 @@
 1) Imagine you are a Data Analyst working at CVS Pharmacy, and you had access to pharmacy sales data.
 
 Output the total number of drugs manufactured by Pfizer, and output the total sales for all the Pfizer drugs.
-
 sol:
 
 SELECT count(drug) as count , sum(total_sales) as sum from pharmacy_sales
@@ -10,7 +9,6 @@ group by manufacturer
 
 
 2) For every FAANG stock in the stock_prices dataset, write a SQL query to find the lowest price each stock ever opened at? Be sure to also order your results by price, in descending order.
-
 sol:
 
 SELECT ticker , MIN(open) as min_open FROM stock_prices
@@ -18,15 +16,35 @@ GROUP BY ticker
 ORDER BY min_open desc
 
 3) This SQL GROUP BY exercise uses real data from a LinkedIn SQL Interview question which is a bit too hard to tackle right now, so we'll solve an easier variant of the interview question.
-
 Suppose you are given a table of candidates and their skills. How many candidates possess each of the different skills? Sort your answers based on the count of candidates, from highest to lowest.
-
 sol:
 
 SELECT skill , count(skill) as count_min FROM candidates GROUP BY skill ORDER BY count_min DESC;
 
 4) Use SQL's HAVING & MIN commands to find all FAANG stocks whose open share price was always greater than $100.
-
 sol:
 
 SELECT ticker , MIN(open) FROM stock_prices GROUP BY ticker HAVING MIN(open) > 100 ORDER BY MIN(open) desc;
+
+5) Given a table of candidates and their technical skills, list the candidate IDs of candidates who have more than 2 technical skills.
+sol:
+
+SELECT candidate_id FROM candidates GROUP BY candidate_id HAVING COUNT(candidate_id) > 2 ;
+
+6) Assume you're given a table containing data on Amazon customers and their spending on products in different category. Write a query using COUNT DISTINCT to identify the number of unique products within each product category.
+sol:
+
+SELECT category , COUNT(DISTINCT product) FROM product_spend GROUP BY category;
+
+7) Display the stocks which had "big-mover months", and how many of those months they had. Order your results from the stocks with the most, to least, "big-mover months".
+
+What is a big-mover month?
+A "big-mover month" is when a stock closes up or down by greater than 10% compared to the price it opened at.
+
+For example, when COVID hit and e-commerce became the new normal, Amazon stock in April 2020 had a big-mover month because the price shot up from $96.65 per share at open to $123.70 at close – a 28% increase!
+sol:
+
+SELECT ticker , count(date) as count_ FROM stock_prices
+WHERE (close - open)/open > 0.10 OR (close - open)/open < -0.10
+group by ticker
+order by count_ desc;
