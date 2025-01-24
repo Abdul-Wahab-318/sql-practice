@@ -1,0 +1,32 @@
+1) Imagine you are a Data Analyst working at CVS Pharmacy, and you had access to pharmacy sales data.
+
+Output the total number of drugs manufactured by Pfizer, and output the total sales for all the Pfizer drugs.
+
+sol:
+
+SELECT count(drug) as count , sum(total_sales) as sum from pharmacy_sales
+where manufacturer = 'Pfizer'
+group by manufacturer
+
+
+2) For every FAANG stock in the stock_prices dataset, write a SQL query to find the lowest price each stock ever opened at? Be sure to also order your results by price, in descending order.
+
+sol:
+
+SELECT ticker , MIN(open) as min_open FROM stock_prices
+GROUP BY ticker
+ORDER BY min_open desc
+
+3) This SQL GROUP BY exercise uses real data from a LinkedIn SQL Interview question which is a bit too hard to tackle right now, so we'll solve an easier variant of the interview question.
+
+Suppose you are given a table of candidates and their skills. How many candidates possess each of the different skills? Sort your answers based on the count of candidates, from highest to lowest.
+
+sol:
+
+SELECT skill , count(skill) as count_min FROM candidates GROUP BY skill ORDER BY count_min DESC;
+
+4) Use SQL's HAVING & MIN commands to find all FAANG stocks whose open share price was always greater than $100.
+
+sol:
+
+SELECT ticker , MIN(open) FROM stock_prices GROUP BY ticker HAVING MIN(open) > 100 ORDER BY MIN(open) desc;
