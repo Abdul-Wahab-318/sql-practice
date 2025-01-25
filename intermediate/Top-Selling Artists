@@ -1,0 +1,16 @@
+As the lead data analyst for a prominent music event management company, you have been entrusted with a dataset containing concert revenue and detailed information about various artists.
+Your mission is to unlock valuable insights by analyzing the concert revenue data and identifying the top revenue-generating artists within each music genre.
+Write a query to rank the artists within each genre based on their revenue per member and extract the top revenue-generating artist from each genre. Display the output of the artist name, genre, concert revenue, number of members, and revenue per band member, sorted by the highest revenue per member within each genre.
+
+sol:
+WITH genre_max_revenue AS (
+  SELECT genre , MAX(concert_revenue / number_of_members) as revenue_per_member
+  FROM concerts
+  GROUP BY genre
+)
+
+SELECT artist_name , concert_revenue , concerts.genre , number_of_members , genre_max_revenue.revenue_per_member
+FROM concerts
+INNER JOIN genre_max_revenue ON genre_max_revenue.genre = concerts.genre
+WHERE (concerts.concert_revenue / concerts.number_of_members) = genre_max_revenue.revenue_per_member
+ORDER BY genre_max_revenue.revenue_per_member DESC , genre_max_revenue.genre ASC;
