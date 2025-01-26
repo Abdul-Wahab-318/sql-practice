@@ -1,0 +1,51 @@
+Assume you're given a table on Walmart user transactions. Based on their most recent transaction date, write a query that retrieve the users along with the number of products they bought.
+
+Output the user's most recent transaction date, user ID, and the number of products, sorted in chronological order by the transaction date.
+
+sol:
+
+WITH most_recent_cte AS(
+
+  SELECT user_id , MAX(transaction_date) AS most_recent_date 
+  FROM user_transactions
+  GROUP BY user_id
+  
+),
+
+-- SOLUTION USING RANK
+
+-- user_count_cte AS (
+
+--   SELECT user_transactions.user_id AS user_id , most_recent_cte.most_recent_date AS most_recent_date,
+--   COUNT(product_id) 
+--     OVER( PARTITION BY user_transactions.user_id ORDER BY most_recent_cte.most_recent_date ) AS purchase_count,
+--   ROW_NUMBER()
+--     OVER( PARTITION BY user_transactions.user_id ORDER BY most_recent_cte.most_recent_date ) as rank_
+--   FROM most_recent_cte
+--   INNER JOIN user_transactions
+--     ON user_transactions.user_id = most_recent_cte.user_id
+--   WHERE user_transactions.transaction_date = most_recent_cte.most_recent_date
+-- )
+
+-- SELECT  most_recent_date , user_id , purchase_count
+-- FROM user_count_cte
+-- WHERE rank_ = 1
+-- ORDER BY most_recent_date ASC;
+
+-- SOLUTION WITHOUT RANK
+
+user_count_cte AS (
+
+  SELECT user_transactions.user_id AS user_id , most_recent_cte.most_recent_date AS most_recent_date,
+  COUNT(product_id) 
+    OVER( PARTITION BY user_transactions.user_id ORDER BY most_recent_cte.most_recent_date ) AS purchase_count
+  FROM most_recent_cte
+  INNER JOIN user_transactions
+    ON user_transactions.user_id = most_recent_cte.user_id
+  WHERE user_transactions.transaction_date = most_recent_cte.most_recent_date
+)
+
+SELECT  DISTINCT most_recent_date , user_id , purchase_count
+FROM user_count_cte
+ORDER BY most_recent_date ASC;
+
