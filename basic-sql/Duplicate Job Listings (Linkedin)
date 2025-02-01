@@ -1,0 +1,7 @@
+SELECT COUNT(*) / 2 AS duplicate_companies 
+FROM job_listings
+INNER JOIN job_listings AS jl
+  ON jl.company_id = job_listings.company_id
+WHERE jl.title = job_listings.title 
+AND jl.description = job_listings.description 
+AND jl.job_id != job_listings.job_id
